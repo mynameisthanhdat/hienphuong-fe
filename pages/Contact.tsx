@@ -58,7 +58,7 @@ const Contact: React.FC = () => {
                     className="flex items-center justify-center space-x-2 bg-[#1877F2] text-white p-4 rounded-xl shadow-md hover:opacity-90 transition"
                   >
                     <Facebook className="w-5 h-5" />
-                    <span className="font-bold">Facebook</span>
+                    <span className="font-bold">{t('contact.socialFacebook')}</span>
                   </a>
                   
                   <a 
@@ -68,7 +68,7 @@ const Contact: React.FC = () => {
                     className="flex items-center justify-center space-x-2 bg-[#0068FF] text-white p-4 rounded-xl shadow-md hover:opacity-90 transition"
                   >
                     <MessageCircle className="w-5 h-5" />
-                    <span className="font-bold">Zalo</span>
+                    <span className="font-bold">{t('contact.socialZalo')}</span>
                   </a>
                 </div>
               </div>

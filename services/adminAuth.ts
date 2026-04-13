@@ -29,6 +29,10 @@ interface AdminLoginResponse {
 
 export const adminSessionStorageKey = 'hienphuong-motel-admin-session';
 
+interface JwtPayload {
+  exp?: number;
+}
+
 const setAdminAuthHeader = (token: string | null): void => {
   if (token) {
     apiClient.defaults.headers.common.Authorization = `Bearer ${token}`;
@@ -36,6 +40,45 @@ const setAdminAuthHeader = (token: string | null): void => {
   }
 
   delete apiClient.defaults.headers.common.Authorization;
+};
+
+const decodeBase64Url = (value: string): string => {
+  const normalizedValue = value.replace(/-/g, '+').replace(/_/g, '/');
+  const paddedValue = normalizedValue.padEnd(Math.ceil(normalizedValue.length / 4) * 4, '=');
+
+  if (typeof window !== 'undefined' && typeof window.atob === 'function') {
+    return window.atob(paddedValue);
+  }
+
+  if (typeof globalThis.Buffer !== 'undefined') {
+    return globalThis.Buffer.from(paddedValue, 'base64').toString('utf-8');
+  }
+
+  throw new Error('JWT_DECODE_UNAVAILABLE');
+};
+
+const getJwtPayload = (token: string): JwtPayload | null => {
+  const [, payload] = token.split('.');
+
+  if (!payload) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(decodeBase64Url(payload)) as JwtPayload;
+  } catch {
+    return null;
+  }
+};
+
+const isTokenExpired = (token: string): boolean => {
+  const payload = getJwtPayload(token);
+
+  if (!payload || typeof payload.exp !== 'number') {
+    return true;
+  }
+
+  return Date.now() >= payload.exp * 1000;
 };
 
 export const getAdminSession = (): AdminSession | null => {
@@ -55,7 +98,8 @@ export const getAdminSession = (): AdminSession | null => {
       typeof session.token !== 'string' ||
       !session.token ||
       typeof session.username !== 'string' ||
-      !session.username
+      !session.username ||
+      isTokenExpired(session.token)
     ) {
       window.localStorage.removeItem(adminSessionStorageKey);
       setAdminAuthHeader(null);
@@ -79,9 +123,6 @@ export const loginAdmin = async ({ username, password }: AdminLoginPayload): Pro
       username: username.trim(),
       password,
     }) as any;
-
-    console.log('response login: ', response);
-    
 
     const { token, user } = response.data.data;
     const session: AdminSession = {

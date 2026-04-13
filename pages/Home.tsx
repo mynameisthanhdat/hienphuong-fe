@@ -25,7 +25,7 @@ const ServiceItem: React.FC<ServiceItemProps> = ({ item }) => (
 
 const Home: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const heroImages = [
     "https://picsum.photos/1920/1080?random=1", // Ảnh 1: Tổng quan / Sảnh
@@ -57,11 +57,18 @@ const Home: React.FC = () => {
 
   // Data for featured rooms, now with type/category for linking
   const featuredRooms = [
-    { id: '206', name: t('home.suiteLuxury'), price: '550.000 VNĐ', image: 'https://picsum.photos/600/800?random=206', type: 'Double', category: 'VIP' },
-    { id: '302', name: t('home.deluxeDouble'), price: '400.000 VNĐ', image: 'https://picsum.photos/600/800?random=302', type: 'Double', category: 'Standard' },
-    { id: '301', name: t('home.gardenSingle'), price: '250.000 VNĐ', image: 'https://picsum.photos/600/800?random=301', type: 'Single', category: 'Standard' },
-    { id: '207', name: t('home.vipSingle'), price: '350.000 VNĐ', image: 'https://picsum.photos/600/800?random=207', type: 'Single', category: 'VIP' },
+    { id: '206', name: t('home.suiteLuxury'), price: 550000, image: 'https://picsum.photos/600/800?random=206', type: 'Double', category: 'VIP' },
+    { id: '302', name: t('home.deluxeDouble'), price: 400000, image: 'https://picsum.photos/600/800?random=302', type: 'Double', category: 'Standard' },
+    { id: '301', name: t('home.gardenSingle'), price: 250000, image: 'https://picsum.photos/600/800?random=301', type: 'Single', category: 'Standard' },
+    { id: '207', name: t('home.vipSingle'), price: 350000, image: 'https://picsum.photos/600/800?random=207', type: 'Single', category: 'VIP' },
   ];
+
+  const formatVndPrice = (price: number) =>
+    new Intl.NumberFormat(i18n.language === 'vi' ? 'vi-VN' : 'en-US', {
+      style: 'currency',
+      currency: 'VND',
+      maximumFractionDigits: 0,
+    }).format(price);
 
 
   // Mock data for visitors/reviews
@@ -110,7 +117,7 @@ const Home: React.FC = () => {
         {/* Content */}
         <div className="relative z-20 text-center px-4 animate-fade-in-up">
           <h2 className="text-gold-400 font-sans tracking-[0.3em] text-sm md:text-lg mb-6 uppercase border-b border-gold-400/50 inline-block pb-2">{t('home.heroEyebrow')}</h2>
-          <h1 className="text-5xl md:text-8xl font-serif text-white font-bold mb-8 drop-shadow-2xl leading-tight">
+          <h1 className="text-4xl md:text-8xl font-serif text-white font-bold mb-8 drop-shadow-2xl leading-tight">
             {t('home.heroTitleLead')} <br/> <span className="italic text-gold-500 font-light">{t('home.heroTitleAccent')}</span>
           </h1>
           {/* Buttons removed as requested */}
@@ -156,7 +163,9 @@ const Home: React.FC = () => {
                 
                 <div className="absolute bottom-5 left-5 right-5 bg-white/90 backdrop-blur-sm p-5 rounded-xl shadow-lg border border-white/20">
                     <div>
-                        <p className="text-xs text-brown-500 uppercase font-bold tracking-wider">{t('home.featuredPrice', { price: room.price })}</p>
+                        <p className="text-xs text-brown-500 uppercase font-bold tracking-wider">
+                          {t('home.featuredPrice', { price: formatVndPrice(room.price) })}
+                        </p>
                         <h4 className="text-xl font-serif font-bold text-brown-900 mt-1">{room.name}</h4>
                     </div>
                 </div>

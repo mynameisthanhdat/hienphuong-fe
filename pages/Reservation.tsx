@@ -46,7 +46,12 @@ const normalizeBookingStatus = (status: string | undefined): 'available' | 'book
   return normalizedStatus === 'booked' ? 'booked' : 'available';
 };
 
-const formatPrice = (price: number) => `${new Intl.NumberFormat('vi-VN').format(price)} VNĐ`;
+const formatPrice = (price: number, language: string) =>
+  new Intl.NumberFormat(language === 'vi' ? 'vi-VN' : 'en-US', {
+    style: 'currency',
+    currency: 'VND',
+    maximumFractionDigits: 0,
+  }).format(price);
 
 const formatForeignPrice = (price: number | undefined, currency: 'USD' | 'EUR') => {
   if (typeof price !== 'number') {
@@ -76,7 +81,7 @@ const isValidStayDateRange = (checkIn: string, checkOut: string): boolean => {
 };
 
 const Reservation: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [form, setForm] = useState<IReservationForm>({
     fullName: '',
     phone: '',
@@ -150,7 +155,7 @@ const Reservation: React.FC = () => {
         console.error('Failed to load reservation rooms:', error);
         if (!isCancelled) {
           setRoomsPayload(null);
-          setRoomsLoadError(error instanceof Error ? error.message : 'Failed to load rooms.');
+          setRoomsLoadError(error instanceof Error ? error.message : t('reservation.roomLoadError'));
         }
       } finally {
         if (!isCancelled) {
@@ -280,7 +285,7 @@ const Reservation: React.FC = () => {
   };
 
   const getRoomOptionLabel = (room: Room) => {
-    return `${room.name} • ${formatPrice(room.price)} • ${getRoomStatusLabel(room.booking_status)}`;
+    return `${room.name} • ${formatPrice(room.price, i18n.language)} • ${getRoomStatusLabel(room.booking_status)}`;
   };
 
   const customStyles = `
@@ -543,7 +548,7 @@ const Reservation: React.FC = () => {
                               </div>
                               <div className="mt-3 space-y-2">
                                 <p className="text-sm font-semibold text-[#3E2C23]">
-                                  {formatPrice(room.price)}
+                                  {formatPrice(room.price, i18n.language)}
                                 </p>
                                 {internationalRatesLabel && (
                                   <p className="text-[11px] leading-4 text-[#7c6c60]">
@@ -599,7 +604,7 @@ const Reservation: React.FC = () => {
                         {t('reservation.roomSummary', {
                           type: getRoomTypeLabel(selectedRoom.type),
                           category: getRoomCategoryLabel(selectedRoom.category),
-                          price: formatPrice(selectedRoom.price),
+                          price: formatPrice(selectedRoom.price, i18n.language),
                         })}
                       </p>
                       {getInternationalRatesLabel(selectedRoom) && (

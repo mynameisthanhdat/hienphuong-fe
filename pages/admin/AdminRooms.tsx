@@ -325,6 +325,21 @@ const AdminRooms: React.FC = () => {
   };
 
   const getRoomImage = (room: Room) => room.thumbnail || room.images?.[0] || roomImageFallback;
+  const getRoomCategoryLabel = (category: RoomCategory) => {
+    if (category === 'VIP') {
+      return i18n.language === 'vi' ? 'Cao cấp' : 'Deluxe';
+    } else {
+      return i18n.language === 'vi' ? 'Tiêu chuẩn' : 'Standard';
+    }
+  };
+
+  const getRoomTypeLabel = (type: RoomType) => {
+    if (type === 'Single') {
+      return i18n.language === 'vi' ? 'Phòng Đơn' : 'Double Room';
+    } else {
+      return i18n.language === 'vi' ? 'Phòng Đôi' : 'Quad Room';
+    }
+  };
 
   return (
     <>
@@ -464,13 +479,10 @@ const AdminRooms: React.FC = () => {
                         />
                         <div>
                           <p className="font-bold">{room.name}</p>
-                          <p className="mt-1 text-xs uppercase tracking-[0.14em] text-[#8b7258]">
-                            {room.id}
-                          </p>
                         </div>
                       </div>
-                      <div className="font-semibold text-[#6f5a46]">{room.type}</div>
-                      <div className="font-semibold text-[#6f5a46]">{room.category}</div>
+                      <div className="font-semibold text-[#6f5a46]">{getRoomTypeLabel(room.type)}</div>
+                      <div className="font-semibold text-[#6f5a46]">{getRoomCategoryLabel(room.category)}</div>
                       <div>
                         <p className="font-semibold">{formatVnd(room.price)}</p>
                         {(typeof room.usdPrice === 'number' || typeof room.euroPrice === 'number') && (
@@ -547,7 +559,7 @@ const AdminRooms: React.FC = () => {
                           {room.type}
                         </span>
                         <span className="rounded-full border border-[#d7c8b5] bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-[#6f5a46]">
-                          {room.category}
+                          {getRoomCategoryLabel(room.category)}
                         </span>
                       </div>
 

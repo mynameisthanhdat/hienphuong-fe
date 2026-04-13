@@ -12,7 +12,7 @@ const ChatWidget: React.FC = () => {
       <div 
         className={`
           mb-4 bg-white rounded-2xl shadow-2xl overflow-hidden border border-brown-100 transition-all duration-300 origin-bottom-right
-          ${isOpen ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-4 pointer-events-none'}
+          ${isOpen ? 'block opacity-100 scale-100 translate-y-0' : 'hidden opacity-0 scale-95 translate-y-4 pointer-events-none'}
         `}
       >
         <div className="bg-brown-800 p-3 text-white text-center font-bold font-serif text-sm tracking-wider">
