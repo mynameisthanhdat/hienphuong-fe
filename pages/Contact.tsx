@@ -1,15 +1,66 @@
 import React from 'react';
-import { MapPin, Phone, Facebook, MessageCircle, Navigation } from 'lucide-react';
+import { Facebook, Instagram, MapPin, MessageCircle, Music2, Navigation, Phone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+
+const primaryPhoneNumber = '0345011468';
+const secondaryPhoneNumber = '0377586258';
+const facebookUrl =
+  import.meta.env.VITE_FACEBOOK_URL?.trim() ||
+  'https://www.facebook.com/profile.php?id=61577722349701&locale=vi_VN';
+const zaloUrl = import.meta.env.VITE_ZALO_URL?.trim() || 'https://zalo.me/0345011468';
+const instagramUrl = import.meta.env.VITE_INSTAGRAM_URL?.trim() || 'https://www.instagram.com/hienphuongmotel/';
+const tiktokUrl = import.meta.env.VITE_TIKTOK_URL?.trim() || 'https://www.tiktok.com/@motelhienphuong';
 
 const Contact: React.FC = () => {
   const { t } = useTranslation();
+  const contactChannels = [
+    {
+      label: t('contact.socialPhone'),
+      value: '0345 011 468',
+      href: `tel:${primaryPhoneNumber}`,
+      Icon: Phone,
+      className: 'bg-[#c59f58] text-[#2f241c]',
+      external: false,
+    },
+    {
+      label: t('contact.socialZalo'),
+      value: 'Zalo 0345 011 468',
+      href: zaloUrl,
+      Icon: MessageCircle,
+      className: 'bg-[#0068FF] text-white',
+      external: true,
+    },
+    {
+      label: t('contact.socialFacebook'),
+      value: 'Hiền Phương Motel',
+      href: facebookUrl,
+      Icon: Facebook,
+      className: 'bg-[#1877F2] text-white',
+      external: true,
+    },
+    {
+      label: t('contact.socialInstagram'),
+      value: '@hienphuongmotel',
+      href: instagramUrl,
+      Icon: Instagram,
+      className: 'bg-[linear-gradient(135deg,#feda75_0%,#d62976_50%,#4f5bd5_100%)] text-white',
+      external: true,
+    },
+    {
+      label: t('contact.socialTiktok'),
+      value: '@motelhienphuong',
+      href: tiktokUrl,
+      Icon: Music2,
+      className: 'bg-[#111111] text-white',
+      external: true,
+    },
+  ];
 
   return (
     <div>
       {/* Hero Banner */}
       <div className="relative h-[50vh] flex items-center justify-center bg-brown-900">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url("https://picsum.photos/1920/1080?random=14")' }}></div>
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url("https://i.ibb.co/3Y7n891v/9.png")' }}></div>
         <div className="absolute inset-0 bg-black/50"></div>
         <div className="relative z-10 text-center animate-fade-in-up px-4">
           <h1 className="text-5xl md:text-6xl font-serif font-bold text-white mb-4 drop-shadow-lg">{t('contact.heroTitle')}</h1>
@@ -44,32 +95,39 @@ const Contact: React.FC = () => {
                   <div>
                     <h4 className="font-bold text-brown-800 text-lg mb-1">{t('contact.phoneTitle')}</h4>
                     <div className="flex flex-col space-y-1">
-                      <a href="tel:0345011468" className="text-brown-600 hover:text-gold-600 transition">0345 011 468</a>
-                      <a href="tel:0377586258" className="text-brown-600 hover:text-gold-600 transition">0377 586 258</a>
+                      <a href={`tel:${primaryPhoneNumber}`} className="text-brown-600 hover:text-gold-600 transition">0345 011 468</a>
+                      <a href={`tel:${secondaryPhoneNumber}`} className="text-brown-600 hover:text-gold-600 transition">0377 586 258</a>
                     </div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <a 
-                    href="https://www.facebook.com/profile.php?id=61577722349701&locale=vi_VN" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="flex items-center justify-center space-x-2 bg-[#1877F2] text-white p-4 rounded-xl shadow-md hover:opacity-90 transition"
-                  >
-                    <Facebook className="w-5 h-5" />
-                    <span className="font-bold">{t('contact.socialFacebook')}</span>
-                  </a>
-                  
-                  <a 
-                    href="https://zalo.me/0345011468" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="flex items-center justify-center space-x-2 bg-[#0068FF] text-white p-4 rounded-xl shadow-md hover:opacity-90 transition"
-                  >
-                    <MessageCircle className="w-5 h-5" />
-                    <span className="font-bold">{t('contact.socialZalo')}</span>
-                  </a>
+                <div className="rounded-[28px] border border-brown-100 bg-white p-5 shadow-sm">
+                  <p className="text-xs font-bold uppercase tracking-[0.22em] text-gold-600">
+                    {t('contact.quickChannels')}
+                  </p>
+                  <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    {contactChannels.map(({ label, value, href, Icon, className, external }) => (
+                      <a
+                        key={label}
+                        href={href}
+                        target={external ? '_blank' : undefined}
+                        rel={external ? 'noreferrer' : undefined}
+                        className="group flex items-center gap-4 rounded-2xl border border-brown-100 bg-[#fffaf2] p-4 transition hover:-translate-y-0.5 hover:border-gold-300 hover:shadow-md"
+                      >
+                        <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl shadow-sm ${className}`}>
+                          <Icon size={20} />
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block text-[11px] font-bold uppercase tracking-[0.18em] text-brown-400">
+                            {label}
+                          </span>
+                          <span className="mt-1 block truncate text-sm font-bold text-brown-900 transition group-hover:text-gold-700">
+                            {value}
+                          </span>
+                        </span>
+                      </a>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

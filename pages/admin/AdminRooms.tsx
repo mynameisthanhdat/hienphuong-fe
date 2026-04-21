@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   BedDouble,
   Download,
@@ -9,19 +9,19 @@ import {
   Sparkles,
   Trash2,
   X,
-} from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+} from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   AdminRoomPayload,
   createAdminRoom,
   deleteAdminRoom,
   getAdminRooms,
   updateAdminRoom,
-} from '../../services/adminRoomService';
-import { Room, RoomCategory, RoomType } from '../../types';
+} from "../../services/adminRoomService";
+import { Room, RoomCategory, RoomType } from "../../types";
 
-type CategoryFilter = 'ALL' | RoomCategory;
-type RoomModalMode = 'create' | 'edit' | null;
+type CategoryFilter = "ALL" | RoomCategory;
+type RoomModalMode = "create" | "edit" | null;
 
 interface RoomFormState {
   name: string;
@@ -34,24 +34,24 @@ interface RoomFormState {
 }
 
 const roomImageFallback =
-  'data:image/svg+xml;utf8,' +
+  "data:image/svg+xml;utf8," +
   encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420">' +
       '<rect width="640" height="420" fill="#f6efe5"/>' +
       '<rect x="40" y="40" width="560" height="340" rx="28" fill="#eadbc4"/>' +
       '<text x="320" y="205" text-anchor="middle" fill="#8b7258" font-family="Arial, sans-serif" font-size="34" font-weight="700">HIEN PHUONG</text>' +
       '<text x="320" y="252" text-anchor="middle" fill="#9a7d58" font-family="Arial, sans-serif" font-size="20">ROOM IMAGE</text>' +
-    '</svg>',
+      "</svg>",
   );
 
 const createInitialFormState = (): RoomFormState => ({
-  name: '',
-  price: '',
-  description: '',
-  type: 'Single',
-  thumbnail: '',
-  images: [''],
-  category: 'Standard',
+  name: "",
+  price: "",
+  description: "",
+  type: "Single",
+  thumbnail: "",
+  images: [""],
+  category: "Standard",
 });
 
 const mapRoomToFormState = (room: Room): RoomFormState => ({
@@ -59,22 +59,24 @@ const mapRoomToFormState = (room: Room): RoomFormState => ({
   price: String(room.price),
   description: room.description,
   type: room.type,
-  thumbnail: room.thumbnail ?? '',
-  images: room.images?.length ? [...room.images] : [''],
+  thumbnail: room.thumbnail ?? "",
+  images: room.images?.length ? [...room.images] : [""],
   category: room.category,
 });
 
 const AdminRooms: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [rooms, setRooms] = useState<Room[]>([]);
-  const [search, setSearch] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('ALL');
+  const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("ALL");
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [modalMode, setModalMode] = useState<RoomModalMode>(null);
   const [editingRoom, setEditingRoom] = useState<Room | null>(null);
   const [roomPendingDelete, setRoomPendingDelete] = useState<Room | null>(null);
-  const [formState, setFormState] = useState<RoomFormState>(createInitialFormState);
+  const [formState, setFormState] = useState<RoomFormState>(
+    createInitialFormState,
+  );
   const [formError, setFormError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -89,9 +91,9 @@ const AdminRooms: React.FC = () => {
       setRooms(nextRooms);
     } catch (error) {
       const message =
-        error instanceof Error && error.message === 'MISSING_ADMIN_TOKEN'
-          ? t('admin.auth.redirectHint')
-          : t('admin.rooms.loadError');
+        error instanceof Error && error.message === "MISSING_ADMIN_TOKEN"
+          ? t("admin.auth.redirectHint")
+          : t("admin.rooms.loadError");
       setLoadError(message);
     } finally {
       setIsLoading(false);
@@ -103,12 +105,12 @@ const AdminRooms: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if ((!modalMode && !roomPendingDelete) || typeof document === 'undefined') {
+    if ((!modalMode && !roomPendingDelete) || typeof document === "undefined") {
       return undefined;
     }
 
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
 
     return () => {
       document.body.style.overflow = previousOverflow;
@@ -116,14 +118,14 @@ const AdminRooms: React.FC = () => {
   }, [modalMode, roomPendingDelete]);
 
   const openCreateModal = () => {
-    setModalMode('create');
+    setModalMode("create");
     setEditingRoom(null);
     setFormState(createInitialFormState());
     setFormError(null);
   };
 
   const openEditModal = (room: Room) => {
-    setModalMode('edit');
+    setModalMode("edit");
     setEditingRoom(room);
     setFormState(mapRoomToFormState(room));
     setFormError(null);
@@ -154,7 +156,10 @@ const AdminRooms: React.FC = () => {
     setDeleteError(null);
   };
 
-  const updateFormField = <K extends keyof RoomFormState>(field: K, value: RoomFormState[K]) => {
+  const updateFormField = <K extends keyof RoomFormState>(
+    field: K,
+    value: RoomFormState[K],
+  ) => {
     setFormState((current) => ({
       ...current,
       [field]: value,
@@ -164,24 +169,28 @@ const AdminRooms: React.FC = () => {
   const updateImageField = (index: number, value: string) => {
     setFormState((current) => ({
       ...current,
-      images: current.images.map((image, imageIndex) => (imageIndex === index ? value : image)),
+      images: current.images.map((image, imageIndex) =>
+        imageIndex === index ? value : image,
+      ),
     }));
   };
 
   const addImageField = () => {
     setFormState((current) => ({
       ...current,
-      images: [...current.images, ''],
+      images: [...current.images, ""],
     }));
   };
 
   const removeImageField = (index: number) => {
     setFormState((current) => {
-      const nextImages = current.images.filter((_, imageIndex) => imageIndex !== index);
+      const nextImages = current.images.filter(
+        (_, imageIndex) => imageIndex !== index,
+      );
 
       return {
         ...current,
-        images: nextImages.length > 0 ? nextImages : [''],
+        images: nextImages.length > 0 ? nextImages : [""],
       };
     });
   };
@@ -193,12 +202,12 @@ const AdminRooms: React.FC = () => {
     const normalizedPrice = Number(formState.price);
 
     if (!normalizedName || !normalizedDescription || !normalizedThumbnail) {
-      setFormError(t('admin.rooms.formErrorRequired'));
+      setFormError(t("admin.rooms.formErrorRequired"));
       return null;
     }
 
     if (!Number.isFinite(normalizedPrice) || normalizedPrice <= 0) {
-      setFormError(t('admin.rooms.formErrorPrice'));
+      setFormError(t("admin.rooms.formErrorPrice"));
       return null;
     }
 
@@ -226,7 +235,7 @@ const AdminRooms: React.FC = () => {
     setIsSaving(true);
 
     try {
-      if (modalMode === 'edit' && editingRoom) {
+      if (modalMode === "edit" && editingRoom) {
         await updateAdminRoom(editingRoom.id, payload);
       } else {
         await createAdminRoom(payload);
@@ -236,9 +245,9 @@ const AdminRooms: React.FC = () => {
       await loadRooms();
     } catch (error) {
       const message =
-        error instanceof Error && error.message === 'MISSING_ADMIN_TOKEN'
-          ? t('admin.auth.redirectHint')
-          : t('admin.rooms.saveError');
+        error instanceof Error && error.message === "MISSING_ADMIN_TOKEN"
+          ? t("admin.auth.redirectHint")
+          : t("admin.rooms.saveError");
       setFormError(message);
     } finally {
       setIsSaving(false);
@@ -259,9 +268,9 @@ const AdminRooms: React.FC = () => {
       await loadRooms();
     } catch (error) {
       const message =
-        error instanceof Error && error.message === 'MISSING_ADMIN_TOKEN'
-          ? t('admin.auth.redirectHint')
-          : t('admin.rooms.deleteError');
+        error instanceof Error && error.message === "MISSING_ADMIN_TOKEN"
+          ? t("admin.auth.redirectHint")
+          : t("admin.rooms.deleteError");
       setDeleteError(message);
     } finally {
       setIsDeleting(false);
@@ -275,32 +284,36 @@ const AdminRooms: React.FC = () => {
       room.name.toLowerCase().includes(normalizedKeyword) ||
       room.id.toLowerCase().includes(normalizedKeyword) ||
       room.description.toLowerCase().includes(normalizedKeyword);
-    const matchesCategory = categoryFilter === 'ALL' || room.category === categoryFilter;
+    const matchesCategory =
+      categoryFilter === "ALL" || room.category === categoryFilter;
 
     return matchesSearch && matchesCategory;
   });
 
   const totalRooms = rooms.length;
-  const singleRooms = rooms.filter((room) => room.type === 'Single').length;
-  const doubleRooms = rooms.filter((room) => room.type === 'Double').length;
-  const vipRooms = rooms.filter((room) => room.category === 'VIP').length;
-  const locale = i18n.language === 'vi' ? 'vi-VN' : 'en-US';
-  const isEditMode = modalMode === 'edit';
+  const singleRooms = rooms.filter((room) => room.type === "Single").length;
+  const doubleRooms = rooms.filter((room) => room.type === "Double").length;
+  const vipRooms = rooms.filter((room) => room.category === "VIP").length;
+  const locale = i18n.language === "vi" ? "vi-VN" : "en-US";
+  const isEditMode = modalMode === "edit";
 
   const formatVnd = (price: number) =>
-    new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
+    new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
       maximumFractionDigits: 0,
     }).format(price);
 
-  const formatForeign = (price: number | undefined, currency: 'USD' | 'EUR') => {
-    if (typeof price !== 'number') {
+  const formatForeign = (
+    price: number | undefined,
+    currency: "USD" | "EUR",
+  ) => {
+    if (typeof price !== "number") {
       return null;
     }
 
-    return new Intl.NumberFormat(currency === 'USD' ? 'en-US' : 'de-DE', {
-      style: 'currency',
+    return new Intl.NumberFormat(currency === "USD" ? "en-US" : "de-DE", {
+      style: "currency",
       currency,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -309,7 +322,7 @@ const AdminRooms: React.FC = () => {
 
   const formatDateTime = (value?: string) => {
     if (!value) {
-      return '-';
+      return "-";
     }
 
     const date = new Date(value);
@@ -319,25 +332,26 @@ const AdminRooms: React.FC = () => {
     }
 
     return new Intl.DateTimeFormat(locale, {
-      dateStyle: 'short',
-      timeStyle: 'short',
+      dateStyle: "short",
+      timeStyle: "short",
     }).format(date);
   };
 
-  const getRoomImage = (room: Room) => room.thumbnail || room.images?.[0] || roomImageFallback;
+  const getRoomImage = (room: Room) =>
+    room.thumbnail || room.images?.[0] || roomImageFallback;
   const getRoomCategoryLabel = (category: RoomCategory) => {
-    if (category === 'VIP') {
-      return i18n.language === 'vi' ? 'Cao cấp' : 'Deluxe';
+    if (category === "VIP") {
+      return i18n.language === "vi" ? "Cao cấp" : "Deluxe";
     } else {
-      return i18n.language === 'vi' ? 'Tiêu chuẩn' : 'Standard';
+      return i18n.language === "vi" ? "Tiêu chuẩn" : "Standard";
     }
   };
 
   const getRoomTypeLabel = (type: RoomType) => {
-    if (type === 'Single') {
-      return i18n.language === 'vi' ? 'Phòng Đơn' : 'Double Room';
+    if (type === "Single") {
+      return i18n.language === "vi" ? "Phòng Đơn" : "Double Room";
     } else {
-      return i18n.language === 'vi' ? 'Phòng Đôi' : 'Quad Room';
+      return i18n.language === "vi" ? "Phòng Đôi" : "Quad Room";
     }
   };
 
@@ -349,13 +363,13 @@ const AdminRooms: React.FC = () => {
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-[#d4c2a9] bg-[#fff6e8] px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#9a7d58]">
                 <Sparkles size={14} />
-                {t('admin.rooms.eyebrow')}
+                {t("admin.rooms.eyebrow")}
               </div>
               <h2 className="mt-5 text-3xl font-serif font-bold text-[#2f241c] sm:text-4xl">
-                {t('admin.rooms.title')}
+                {t("admin.rooms.title")}
               </h2>
               <p className="mt-3 max-w-3xl text-sm leading-7 text-[#6f5a46] sm:text-base">
-                {t('admin.rooms.subtitle')}
+                {t("admin.rooms.subtitle")}
               </p>
             </div>
 
@@ -366,7 +380,7 @@ const AdminRooms: React.FC = () => {
                 className="inline-flex items-center gap-2 rounded-full bg-[#2f241c] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1f1712]"
               >
                 <Plus size={16} />
-                {t('admin.rooms.addRoom')}
+                {t("admin.rooms.addRoom")}
               </button>
             </div>
           </div>
@@ -374,17 +388,39 @@ const AdminRooms: React.FC = () => {
 
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {[
-            { label: t('admin.rooms.stats.total'), value: totalRooms, accent: 'text-[#2f241c]' },
-            { label: t('admin.rooms.stats.single'), value: singleRooms, accent: 'text-[#8b5e34]' },
-            { label: t('admin.rooms.stats.double'), value: doubleRooms, accent: 'text-[#7a4d25]' },
-            { label: t('admin.rooms.stats.vip'), value: vipRooms, accent: 'text-[#b8872f]' },
+            {
+              label: t("admin.rooms.stats.total"),
+              value: totalRooms,
+              accent: "text-[#2f241c]",
+            },
+            {
+              label: t("admin.rooms.stats.single"),
+              value: singleRooms,
+              accent: "text-[#8b5e34]",
+            },
+            {
+              label: t("admin.rooms.stats.double"),
+              value: doubleRooms,
+              accent: "text-[#7a4d25]",
+            },
+            {
+              label: t("admin.rooms.stats.vip"),
+              value: vipRooms,
+              accent: "text-[#b8872f]",
+            },
           ].map((stat) => (
             <div
               key={stat.label}
               className="rounded-[28px] border border-[#e1d4c0] bg-white/85 p-5 shadow-[0_20px_60px_rgba(47,36,28,0.06)]"
             >
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#9a7d58]">{stat.label}</p>
-              <p className={`mt-4 text-4xl font-serif font-bold ${stat.accent}`}>{stat.value}</p>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#9a7d58]">
+                {stat.label}
+              </p>
+              <p
+                className={`mt-4 text-4xl font-serif font-bold ${stat.accent}`}
+              >
+                {stat.value}
+              </p>
             </div>
           ))}
         </section>
@@ -400,16 +436,19 @@ const AdminRooms: React.FC = () => {
                 type="text"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder={t('admin.rooms.searchPlaceholder')}
+                placeholder={t("admin.rooms.searchPlaceholder")}
                 className="h-12 w-full rounded-2xl border border-[#e3d6c5] bg-[#fffdf9] pl-11 pr-4 text-[#2f241c] outline-none transition focus:border-[#c59f58] focus:ring-4 focus:ring-[#c59f58]/15"
               />
             </div>
 
             <div className="flex flex-wrap gap-2">
               {[
-                { value: 'ALL' as const, label: t('admin.rooms.filters.all') },
-                { value: 'Standard' as const, label: t('admin.rooms.filters.standard') },
-                { value: 'VIP' as const, label: t('admin.rooms.filters.vip') },
+                { value: "ALL" as const, label: t("admin.rooms.filters.all") },
+                {
+                  value: "Standard" as const,
+                  label: t("admin.rooms.filters.standard"),
+                },
+                { value: "VIP" as const, label: t("admin.rooms.filters.vip") },
               ].map((filter) => (
                 <button
                   key={filter.value}
@@ -417,8 +456,8 @@ const AdminRooms: React.FC = () => {
                   onClick={() => setCategoryFilter(filter.value)}
                   className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                     categoryFilter === filter.value
-                      ? 'bg-[#2f241c] text-white'
-                      : 'bg-[#f5ede2] text-[#6f5a46] hover:bg-[#eadbc4]'
+                      ? "bg-[#2f241c] text-white"
+                      : "bg-[#f5ede2] text-[#6f5a46] hover:bg-[#eadbc4]"
                   }`}
                 >
                   {filter.label}
@@ -430,7 +469,9 @@ const AdminRooms: React.FC = () => {
           {isLoading && (
             <div className="mt-6 rounded-2xl border border-dashed border-[#d9c8b1] bg-[#fff9f0] px-6 py-10 text-center text-[#7a6149]">
               <RefreshCw className="mx-auto h-8 w-8 animate-spin text-[#b79252]" />
-              <p className="mt-4 text-sm font-semibold">{t('admin.rooms.loading')}</p>
+              <p className="mt-4 text-sm font-semibold">
+                {t("admin.rooms.loading")}
+              </p>
             </div>
           )}
 
@@ -443,7 +484,7 @@ const AdminRooms: React.FC = () => {
                 className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#2f241c] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1f1712]"
               >
                 <RefreshCw size={16} />
-                {t('admin.rooms.retry')}
+                {t("admin.rooms.retry")}
               </button>
             </div>
           )}
@@ -452,13 +493,13 @@ const AdminRooms: React.FC = () => {
             <>
               <div className="mt-6 hidden overflow-hidden rounded-[24px] border border-[#eadfce] xl:block">
                 <div className="grid grid-cols-[1.2fr_0.7fr_0.85fr_1fr_1.25fr_0.9fr_1.1fr] bg-[#f6efe5] px-5 py-4 text-xs font-bold uppercase tracking-[0.16em] text-[#8b7258]">
-                  <span>{t('admin.rooms.table.room')}</span>
-                  <span>{t('admin.rooms.table.type')}</span>
-                  <span>{t('admin.rooms.table.category')}</span>
-                  <span>{t('admin.rooms.table.pricing')}</span>
-                  <span>{t('admin.rooms.table.description')}</span>
-                  <span>{t('admin.rooms.table.updated')}</span>
-                  <span>{t('admin.rooms.table.actions')}</span>
+                  <span>{t("admin.rooms.table.room")}</span>
+                  <span>{t("admin.rooms.table.type")}</span>
+                  <span>{t("admin.rooms.table.category")}</span>
+                  <span>{t("admin.rooms.table.pricing")}</span>
+                  <span>{t("admin.rooms.table.description")}</span>
+                  <span>{t("admin.rooms.table.updated")}</span>
+                  <span>{t("admin.rooms.table.actions")}</span>
                 </div>
 
                 <div className="divide-y divide-[#efe4d5] bg-white">
@@ -470,7 +511,7 @@ const AdminRooms: React.FC = () => {
                       <div className="flex items-center gap-4">
                         <img
                           src={getRoomImage(room)}
-                          alt={t('admin.rooms.imageAlt', { name: room.name })}
+                          alt={t("admin.rooms.imageAlt", { name: room.name })}
                           onError={(event) => {
                             event.currentTarget.onerror = null;
                             event.currentTarget.src = roomImageFallback;
@@ -481,20 +522,32 @@ const AdminRooms: React.FC = () => {
                           <p className="font-bold">{room.name}</p>
                         </div>
                       </div>
-                      <div className="font-semibold text-[#6f5a46]">{getRoomTypeLabel(room.type)}</div>
-                      <div className="font-semibold text-[#6f5a46]">{getRoomCategoryLabel(room.category)}</div>
+                      <div className="font-semibold text-[#6f5a46]">
+                        {getRoomTypeLabel(room.type)}
+                      </div>
+                      <div className="font-semibold text-[#6f5a46]">
+                        {getRoomCategoryLabel(room.category)}
+                      </div>
                       <div>
                         <p className="font-semibold">{formatVnd(room.price)}</p>
-                        {(typeof room.usdPrice === 'number' || typeof room.euroPrice === 'number') && (
+                        {(typeof room.usdPrice === "number" ||
+                          typeof room.euroPrice === "number") && (
                           <p className="mt-1 text-xs text-[#7c6753]">
-                            {[formatForeign(room.usdPrice, 'USD'), formatForeign(room.euroPrice, 'EUR')]
+                            {[
+                              formatForeign(room.usdPrice, "USD"),
+                              formatForeign(room.euroPrice, "EUR"),
+                            ]
                               .filter(Boolean)
-                              .join(' • ')}
+                              .join(" • ")}
                           </p>
                         )}
                       </div>
-                      <div className="pr-4 text-sm leading-6 text-[#6f5a46]">{room.description}</div>
-                      <div className="text-[#6f5a46]">{formatDateTime(room.updatedAt)}</div>
+                      <div className="pr-4 text-sm leading-6 text-[#6f5a46]">
+                        {room.description}
+                      </div>
+                      <div className="text-[#6f5a46]">
+                        {formatDateTime(room.updatedAt)}
+                      </div>
                       <div className="flex flex-wrap gap-2">
                         <button
                           type="button"
@@ -502,7 +555,7 @@ const AdminRooms: React.FC = () => {
                           className="inline-flex items-center gap-2 rounded-full border border-[#d7c8b5] bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#2f241c] transition hover:border-[#c59f58]"
                         >
                           <Pencil size={14} />
-                          {t('admin.rooms.edit')}
+                          {t("admin.rooms.edit")}
                         </button>
                         <button
                           type="button"
@@ -510,7 +563,7 @@ const AdminRooms: React.FC = () => {
                           className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-red-700 transition hover:border-red-300 hover:bg-red-100"
                         >
                           <Trash2 size={14} />
-                          {t('admin.rooms.delete')}
+                          {t("admin.rooms.delete")}
                         </button>
                       </div>
                     </div>
@@ -526,7 +579,7 @@ const AdminRooms: React.FC = () => {
                   >
                     <img
                       src={getRoomImage(room)}
-                      alt={t('admin.rooms.imageAlt', { name: room.name })}
+                      alt={t("admin.rooms.imageAlt", { name: room.name })}
                       onError={(event) => {
                         event.currentTarget.onerror = null;
                         event.currentTarget.src = roomImageFallback;
@@ -537,18 +590,23 @@ const AdminRooms: React.FC = () => {
                     <div className="p-5">
                       <div className="flex items-start justify-between gap-3">
                         <div>
-                          <p className="text-lg font-bold text-[#2f241c]">{room.name}</p>
-                          <p className="mt-1 text-xs uppercase tracking-[0.16em] text-[#8b7258]">
-                            {room.id}
+                          <p className="text-lg font-bold text-[#2f241c]">
+                            {room.name}
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold text-[#2f241c]">{formatVnd(room.price)}</p>
-                          {(typeof room.usdPrice === 'number' || typeof room.euroPrice === 'number') && (
+                          <p className="font-semibold text-[#2f241c]">
+                            {formatVnd(room.price)}
+                          </p>
+                          {(typeof room.usdPrice === "number" ||
+                            typeof room.euroPrice === "number") && (
                             <p className="mt-1 text-xs text-[#7c6753]">
-                              {[formatForeign(room.usdPrice, 'USD'), formatForeign(room.euroPrice, 'EUR')]
+                              {[
+                                formatForeign(room.usdPrice, "USD"),
+                                formatForeign(room.euroPrice, "EUR"),
+                              ]
                                 .filter(Boolean)
-                                .join(' • ')}
+                                .join(" • ")}
                             </p>
                           )}
                         </div>
@@ -556,7 +614,7 @@ const AdminRooms: React.FC = () => {
 
                       <div className="mt-4 flex flex-wrap gap-2">
                         <span className="rounded-full border border-[#d7c8b5] bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-[#6f5a46]">
-                          {room.type}
+                          {getRoomTypeLabel(room.type)}
                         </span>
                         <span className="rounded-full border border-[#d7c8b5] bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-[#6f5a46]">
                           {getRoomCategoryLabel(room.category)}
@@ -565,11 +623,14 @@ const AdminRooms: React.FC = () => {
 
                       <div className="mt-4 rounded-2xl bg-[#f7efe4] p-4">
                         <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#8b7258]">
-                          {t('admin.rooms.table.description')}
+                          {t("admin.rooms.table.description")}
                         </p>
-                        <p className="mt-2 text-sm leading-6 text-[#5e4b39]">{room.description}</p>
+                        <p className="mt-2 text-sm leading-6 text-[#5e4b39]">
+                          {room.description}
+                        </p>
                         <p className="mt-3 text-xs text-[#7c6753]">
-                          {t('admin.rooms.table.updated')}: {formatDateTime(room.updatedAt)}
+                          {t("admin.rooms.table.updated")}:{" "}
+                          {formatDateTime(room.updatedAt)}
                         </p>
                       </div>
 
@@ -580,7 +641,7 @@ const AdminRooms: React.FC = () => {
                           className="inline-flex items-center gap-2 rounded-full border border-[#d7c8b5] bg-white px-4 py-2 text-sm font-semibold text-[#2f241c] transition hover:border-[#c59f58]"
                         >
                           <Pencil size={16} />
-                          {t('admin.rooms.edit')}
+                          {t("admin.rooms.edit")}
                         </button>
                         <button
                           type="button"
@@ -588,7 +649,7 @@ const AdminRooms: React.FC = () => {
                           className="inline-flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700 transition hover:border-red-300 hover:bg-red-100"
                         >
                           <Trash2 size={16} />
-                          {t('admin.rooms.delete')}
+                          {t("admin.rooms.delete")}
                         </button>
                       </div>
                     </div>
@@ -599,7 +660,9 @@ const AdminRooms: React.FC = () => {
               {filteredRooms.length === 0 && (
                 <div className="mt-6 rounded-2xl border border-dashed border-[#d9c8b1] bg-[#fff9f0] px-6 py-10 text-center text-[#7a6149]">
                   <BedDouble className="mx-auto h-8 w-8 text-[#b79252]" />
-                  <p className="mt-4 text-sm font-semibold">{t('admin.rooms.empty')}</p>
+                  <p className="mt-4 text-sm font-semibold">
+                    {t("admin.rooms.empty")}
+                  </p>
                 </div>
               )}
             </>
@@ -613,19 +676,23 @@ const AdminRooms: React.FC = () => {
             <div className="flex items-start justify-between gap-4 border-b border-[#ecdcc8] px-6 py-5 sm:px-8">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#9a7d58]">
-                  {t('admin.rooms.formEyebrow')}
+                  {t("admin.rooms.formEyebrow")}
                 </p>
                 <h3 className="mt-2 text-2xl font-serif font-bold text-[#2f241c]">
-                  {isEditMode ? t('admin.rooms.editTitle') : t('admin.rooms.addTitle')}
+                  {isEditMode
+                    ? t("admin.rooms.editTitle")
+                    : t("admin.rooms.addTitle")}
                 </h3>
-                <p className="mt-2 text-sm text-[#6f5a46]">{t('admin.rooms.formSubtitle')}</p>
+                <p className="mt-2 text-sm text-[#6f5a46]">
+                  {t("admin.rooms.formSubtitle")}
+                </p>
               </div>
 
               <button
                 type="button"
                 onClick={() => closeModal()}
                 className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#ddcfbc] text-[#6f5a46] transition hover:border-[#c59f58] hover:text-[#2f241c]"
-                aria-label={t('admin.rooms.close')}
+                aria-label={t("admin.rooms.close")}
               >
                 <X size={18} />
               </button>
@@ -638,88 +705,107 @@ const AdminRooms: React.FC = () => {
               <div className="grid gap-5 md:grid-cols-2">
                 <div className="md:col-span-2">
                   <label className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-[#7d6550]">
-                    {t('admin.rooms.fields.name')}
+                    {t("admin.rooms.fields.name")}
                   </label>
                   <input
                     type="text"
                     value={formState.name}
-                    onChange={(event) => updateFormField('name', event.target.value)}
+                    onChange={(event) =>
+                      updateFormField("name", event.target.value)
+                    }
                     className="h-12 w-full rounded-2xl border border-[#e3d6c5] bg-white px-4 text-[#2f241c] outline-none transition focus:border-[#c59f58] focus:ring-4 focus:ring-[#c59f58]/15"
-                    placeholder={t('admin.rooms.placeholders.name')}
+                    placeholder={t("admin.rooms.placeholders.name")}
                     required
                   />
                 </div>
 
                 <div>
                   <label className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-[#7d6550]">
-                    {t('admin.rooms.fields.price')}
+                    {t("admin.rooms.fields.price")}
                   </label>
                   <input
                     type="number"
                     min="0"
                     step="1000"
                     value={formState.price}
-                    onChange={(event) => updateFormField('price', event.target.value)}
+                    onChange={(event) =>
+                      updateFormField("price", event.target.value)
+                    }
                     className="h-12 w-full rounded-2xl border border-[#e3d6c5] bg-white px-4 text-[#2f241c] outline-none transition focus:border-[#c59f58] focus:ring-4 focus:ring-[#c59f58]/15"
-                    placeholder={t('admin.rooms.placeholders.price')}
+                    placeholder={t("admin.rooms.placeholders.price")}
                     required
                   />
                 </div>
 
                 <div>
                   <label className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-[#7d6550]">
-                    {t('admin.rooms.fields.thumbnail')}
+                    {t("admin.rooms.fields.thumbnail")}
                   </label>
                   <input
                     type="url"
                     value={formState.thumbnail}
-                    onChange={(event) => updateFormField('thumbnail', event.target.value)}
+                    onChange={(event) =>
+                      updateFormField("thumbnail", event.target.value)
+                    }
                     className="h-12 w-full rounded-2xl border border-[#e3d6c5] bg-white px-4 text-[#2f241c] outline-none transition focus:border-[#c59f58] focus:ring-4 focus:ring-[#c59f58]/15"
-                    placeholder={t('admin.rooms.placeholders.thumbnail')}
+                    placeholder={t("admin.rooms.placeholders.thumbnail")}
                     required
                   />
                 </div>
 
                 <div>
                   <label className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-[#7d6550]">
-                    {t('admin.rooms.fields.type')}
+                    {t("admin.rooms.fields.type")}
                   </label>
                   <select
                     value={formState.type}
-                    onChange={(event) => updateFormField('type', event.target.value as RoomType)}
+                    onChange={(event) =>
+                      updateFormField("type", event.target.value as RoomType)
+                    }
                     className="h-12 w-full rounded-2xl border border-[#e3d6c5] bg-white px-4 text-[#2f241c] outline-none transition focus:border-[#c59f58] focus:ring-4 focus:ring-[#c59f58]/15"
                   >
-                    <option value="Single">{t('admin.rooms.typeSingle')}</option>
-                    <option value="Double">{t('admin.rooms.typeDouble')}</option>
+                    <option value="Single">
+                      {t("admin.rooms.typeSingle")}
+                    </option>
+                    <option value="Double">
+                      {t("admin.rooms.typeDouble")}
+                    </option>
                   </select>
                 </div>
 
                 <div>
                   <label className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-[#7d6550]">
-                    {t('admin.rooms.fields.category')}
+                    {t("admin.rooms.fields.category")}
                   </label>
                   <select
                     value={formState.category}
                     onChange={(event) =>
-                      updateFormField('category', event.target.value as RoomCategory)
+                      updateFormField(
+                        "category",
+                        event.target.value as RoomCategory,
+                      )
                     }
                     className="h-12 w-full rounded-2xl border border-[#e3d6c5] bg-white px-4 text-[#2f241c] outline-none transition focus:border-[#c59f58] focus:ring-4 focus:ring-[#c59f58]/15"
                   >
-                    <option value="Standard">{t('admin.rooms.categoryStandard')}</option>
-                    <option value="VIP">{t('admin.rooms.categoryVip')}</option>
+                    <option value="Standard">
+                      {t("admin.rooms.categoryStandard")}
+                    </option>
+                    <option value="VIP">{t("admin.rooms.categoryVip")}</option>
                   </select>
                 </div>
 
                 <div className="md:col-span-2">
                   <label className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-[#7d6550]">
-                    {t('admin.rooms.fields.description')}
+                    {t("admin.rooms.fields.description")}
                   </label>
                   <textarea
                     value={formState.description}
-                    onChange={(event) => updateFormField('description', event.target.value)}
+                    onChange={(event) =>
+                      updateFormField("description", event.target.value)
+                    }
                     rows={4}
                     className="w-full rounded-2xl border border-[#e3d6c5] bg-white px-4 py-3 text-[#2f241c] outline-none transition focus:border-[#c59f58] focus:ring-4 focus:ring-[#c59f58]/15"
-                    placeholder={t('admin.rooms.placeholders.description')}
+                    placeholder={t("admin.rooms.placeholders.description")}
                     required
                   />
                 </div>
@@ -727,7 +813,7 @@ const AdminRooms: React.FC = () => {
                 <div className="md:col-span-2">
                   <div className="flex items-center justify-between gap-3">
                     <label className="block text-xs font-bold uppercase tracking-[0.16em] text-[#7d6550]">
-                      {t('admin.rooms.fields.images')}
+                      {t("admin.rooms.fields.images")}
                     </label>
                     <button
                       type="button"
@@ -735,25 +821,30 @@ const AdminRooms: React.FC = () => {
                       className="inline-flex items-center gap-2 rounded-full border border-[#d7c8b5] bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#2f241c] transition hover:border-[#c59f58]"
                     >
                       <Plus size={14} />
-                      {t('admin.rooms.addImage')}
+                      {t("admin.rooms.addImage")}
                     </button>
                   </div>
 
                   <div className="mt-3 space-y-3">
                     {formState.images.map((image, index) => (
-                      <div key={`${index}-${modalMode}`} className="flex items-center gap-3">
+                      <div
+                        key={`${index}-${modalMode}`}
+                        className="flex items-center gap-3"
+                      >
                         <input
                           type="url"
                           value={image}
-                          onChange={(event) => updateImageField(index, event.target.value)}
+                          onChange={(event) =>
+                            updateImageField(index, event.target.value)
+                          }
                           className="h-12 flex-1 rounded-2xl border border-[#e3d6c5] bg-white px-4 text-[#2f241c] outline-none transition focus:border-[#c59f58] focus:ring-4 focus:ring-[#c59f58]/15"
-                          placeholder={t('admin.rooms.placeholders.image')}
+                          placeholder={t("admin.rooms.placeholders.image")}
                         />
                         <button
                           type="button"
                           onClick={() => removeImageField(index)}
                           className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-[#e3d6c5] bg-white text-[#7d6550] transition hover:border-red-300 hover:text-red-600"
-                          aria-label={t('admin.rooms.removeImage')}
+                          aria-label={t("admin.rooms.removeImage")}
                         >
                           <X size={18} />
                         </button>
@@ -776,7 +867,7 @@ const AdminRooms: React.FC = () => {
                   disabled={isSaving}
                   className="inline-flex h-12 items-center justify-center rounded-2xl border border-[#d7c8b5] px-5 text-sm font-semibold text-[#2f241c] transition hover:border-[#c59f58] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {t('admin.rooms.cancel')}
+                  {t("admin.rooms.cancel")}
                 </button>
                 <button
                   type="submit"
@@ -785,11 +876,11 @@ const AdminRooms: React.FC = () => {
                 >
                   {isSaving
                     ? isEditMode
-                      ? t('admin.rooms.savingUpdate')
-                      : t('admin.rooms.savingCreate')
+                      ? t("admin.rooms.savingUpdate")
+                      : t("admin.rooms.savingCreate")
                     : isEditMode
-                      ? t('admin.rooms.saveUpdate')
-                      : t('admin.rooms.saveCreate')}
+                      ? t("admin.rooms.saveUpdate")
+                      : t("admin.rooms.saveCreate")}
                 </button>
               </div>
             </form>
@@ -803,13 +894,13 @@ const AdminRooms: React.FC = () => {
             <div className="flex items-start justify-between gap-4 border-b border-[#ecdcc8] px-6 py-5 sm:px-8">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#9a7d58]">
-                  {t('admin.rooms.formEyebrow')}
+                  {t("admin.rooms.formEyebrow")}
                 </p>
                 <h3 className="mt-2 text-2xl font-serif font-bold text-[#2f241c]">
-                  {t('admin.rooms.deleteTitle')}
+                  {t("admin.rooms.deleteTitle")}
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-[#6f5a46]">
-                  {t('admin.rooms.deleteDescription', {
+                  {t("admin.rooms.deleteDescription", {
                     name: roomPendingDelete.name,
                   })}
                 </p>
@@ -819,7 +910,7 @@ const AdminRooms: React.FC = () => {
                 type="button"
                 onClick={() => closeDeleteDialog()}
                 className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#ddcfbc] text-[#6f5a46] transition hover:border-[#c59f58] hover:text-[#2f241c]"
-                aria-label={t('admin.rooms.close')}
+                aria-label={t("admin.rooms.close")}
               >
                 <X size={18} />
               </button>
@@ -828,11 +919,14 @@ const AdminRooms: React.FC = () => {
             <div className="px-6 py-6 sm:px-8">
               <div className="rounded-2xl bg-[#f7efe4] p-4">
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#8b7258]">
-                  {t('admin.rooms.table.room')}
+                  {t("admin.rooms.table.room")}
                 </p>
-                <p className="mt-2 text-lg font-semibold text-[#2f241c]">{roomPendingDelete.name}</p>
+                <p className="mt-2 text-lg font-semibold text-[#2f241c]">
+                  {roomPendingDelete.name}
+                </p>
                 <p className="mt-1 text-sm text-[#6f5a46]">
-                  {roomPendingDelete.id} • {roomPendingDelete.type} • {roomPendingDelete.category}
+                  {roomPendingDelete.id} • {roomPendingDelete.type} •{" "}
+                  {roomPendingDelete.category}
                 </p>
               </div>
 
@@ -849,7 +943,7 @@ const AdminRooms: React.FC = () => {
                   disabled={isDeleting}
                   className="inline-flex h-12 items-center justify-center rounded-2xl border border-[#d7c8b5] px-5 text-sm font-semibold text-[#2f241c] transition hover:border-[#c59f58] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {t('admin.rooms.cancel')}
+                  {t("admin.rooms.cancel")}
                 </button>
                 <button
                   type="button"
@@ -858,7 +952,9 @@ const AdminRooms: React.FC = () => {
                   className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-red-600 px-5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-red-300"
                 >
                   <Trash2 size={16} />
-                  {isDeleting ? t('admin.rooms.deleting') : t('admin.rooms.deleteConfirm')}
+                  {isDeleting
+                    ? t("admin.rooms.deleting")
+                    : t("admin.rooms.deleteConfirm")}
                 </button>
               </div>
             </div>

@@ -22,7 +22,7 @@ const Tourism: React.FC = () => {
     <div>
       {/* Hero Banner */}
       <div className="relative h-[50vh] flex items-center justify-center bg-brown-900">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url("https://picsum.photos/1920/1080?random=11")' }}></div>
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url("https://i.ibb.co/XfztkbXm/5.png")' }}></div>
         <div className="absolute inset-0 bg-black/50"></div>
         <div className="relative z-10 text-center animate-fade-in-up px-4">
           <h1 className="text-5xl md:text-6xl font-serif font-bold text-white mb-4 drop-shadow-lg">{t('tourism.heroTitle')}</h1>

@@ -461,7 +461,7 @@ const Rooms: React.FC = () => {
             className="absolute inset-0 bg-cover bg-center"
             style={{
               backgroundImage:
-                'url("https://picsum.photos/1920/1080?random=12")',
+                'url("https://i.ibb.co/ccHj2WWk/6.png")',
             }}
           ></div>
           <div className="absolute inset-0 bg-black/50"></div>

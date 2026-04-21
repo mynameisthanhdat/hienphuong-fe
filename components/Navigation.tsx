@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "./LanguageSwitcher";
+import logoSrc from "../assets/logo.png";
 
 const fallbackLogoSrc = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
   <svg xmlns="http://www.w3.org/2000/svg" width="100" height="150" viewBox="0 0 100 150">
@@ -73,7 +74,7 @@ const Navigation: React.FC = () => {
           {/* Logo Section */}
           <Link to="/" className="flex-shrink-0 flex items-center gap-2 group">
             <img
-              src="https://res.cloudinary.com/dswfc45ya/image/upload/v1776087514/H_7_1_uuz8jt.png"
+              src={logoSrc}
               alt={t("navigation.logoAlt")}
               className={`w-auto object-contain drop-shadow-lg group-hover:opacity-90 transition-all duration-300 ${scrolled ? "h-14" : "h-20"}`}
               onError={(e) => {
