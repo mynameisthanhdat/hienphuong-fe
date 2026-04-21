@@ -8,11 +8,11 @@ const Tourism: React.FC = () => {
   const { t } = useTranslation();
 
   const spots: TouristSpot[] = [
-    { id: 1, name: t('tourism.spots.hoiAn.name'), description: t('tourism.spots.hoiAn.description'), image: 'https://picsum.photos/800/600?random=1' },
-    { id: 2, name: t('tourism.spots.mySon.name'), description: t('tourism.spots.mySon.description'), image: 'https://picsum.photos/800/600?random=2' },
-    { id: 3, name: t('tourism.spots.dragonBridge.name'), description: t('tourism.spots.dragonBridge.description'), image: 'https://picsum.photos/800/600?random=3' },
-    { id: 4, name: t('tourism.spots.bayMau.name'), description: t('tourism.spots.bayMau.description'), image: 'https://picsum.photos/800/600?random=4' },
-    { id: 5, name: t('tourism.spots.vinWonders.name'), description: t('tourism.spots.vinWonders.description'), image: 'https://picsum.photos/800/600?random=5' },
+    { id: 1, name: t('tourism.spots.hoiAn.name'), description: t('tourism.spots.hoiAn.description'), image: 'https://i.ibb.co/39VR1bQZ/hoian.jpg' },
+    { id: 2, name: t('tourism.spots.mySon.name'), description: t('tourism.spots.mySon.description'), image: 'https://i.ibb.co/rG2T0t6w/myson.jpg' },
+    { id: 3, name: t('tourism.spots.dragonBridge.name'), description: t('tourism.spots.dragonBridge.description'), image: 'https://i.ibb.co/LdKcsq6p/caurong.webp' },
+    { id: 4, name: t('tourism.spots.bayMau.name'), description: t('tourism.spots.bayMau.description'), image: 'https://i.ibb.co/W4ryPry0/rungdua.jpg' },
+    { id: 5, name: t('tourism.spots.vinWonders.name'), description: t('tourism.spots.vinWonders.description'), image: 'https://i.ibb.co/67gjT6HF/vinwonders.webp' },
   ];
 
   const prev = () => setCurr((curr) => (curr === 0 ? spots.length - 1 : curr - 1));
