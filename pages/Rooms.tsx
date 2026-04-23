@@ -106,6 +106,36 @@ const getRoomGalleryImages = (room: Room): string[] => {
   return Array.from(new Set(nextImages));
 };
 
+const getRoomSortNumber = (room: Room): number => {
+  const roomNumberMatch = room.name.match(/-\s*(\d+)\s*$/);
+  const fallbackNumberMatch = room.name.match(/(\d+)\s*$/);
+  const idNumber = Number(room.id);
+  const parsedNumber = Number(
+    roomNumberMatch?.[1] ?? fallbackNumberMatch?.[1],
+  );
+
+  if (Number.isFinite(parsedNumber)) {
+    return parsedNumber;
+  }
+
+  return Number.isFinite(idNumber) ? idNumber : Number.MAX_SAFE_INTEGER;
+};
+
+const sortRoomsByNumber = (rooms: Room[]): Room[] =>
+  [...rooms].sort((currentRoom, nextRoom) => {
+    const roomNumberDiff =
+      getRoomSortNumber(currentRoom) - getRoomSortNumber(nextRoom);
+
+    if (roomNumberDiff !== 0) {
+      return roomNumberDiff;
+    }
+
+    return currentRoom.name.localeCompare(nextRoom.name, "vi", {
+      numeric: true,
+      sensitivity: "base",
+    });
+  });
+
 const Rooms: React.FC = () => {
   const location = useLocation();
   const { t, i18n } = useTranslation();
@@ -230,7 +260,7 @@ const Rooms: React.FC = () => {
 
   const apiRooms = extractRoomsFromPayload(roomsPayload);
   const availabilityResponse = extractRoomAvailabilityResponse(roomsPayload);
-  const rooms = hasRoomsApiUrl ? apiRooms : generateRooms();
+  const rooms = sortRoomsByNumber(hasRoomsApiUrl ? apiRooms : generateRooms());
 
   useEffect(() => {
     if (hasResolvedInitialFilters) {

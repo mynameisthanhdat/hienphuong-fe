@@ -15,14 +15,6 @@ const Contact: React.FC = () => {
   const { t } = useTranslation();
   const contactChannels = [
     {
-      label: t('contact.socialPhone'),
-      value: '0345 011 468',
-      href: `tel:${primaryPhoneNumber}`,
-      Icon: Phone,
-      className: 'bg-[#c59f58] text-[#2f241c]',
-      external: false,
-    },
-    {
       label: t('contact.socialZalo'),
       value: 'Zalo 0345 011 468',
       href: zaloUrl,

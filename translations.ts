@@ -34,6 +34,8 @@ export const resources = {
         socialHeading: 'Kết Nối Với Chúng Tôi',
         facebookTitle: 'Facebook Hiền Phương Motel',
         zaloTitle: 'Chat Zalo',
+        instagramTitle: 'Instagram Hiền Phương Motel',
+        tiktokTitle: 'TikTok Hiền Phương Motel',
         copyright: '© {{year}} HIEN PHUONG MOTEL. Tất cả quyền được bảo lưu.',
       },
       chatWidget: {
@@ -671,6 +673,8 @@ export const resources = {
         socialHeading: 'Connect With Us',
         facebookTitle: 'Hiền Phương Motel Facebook',
         zaloTitle: 'Chat on Zalo',
+        instagramTitle: 'Hiền Phương Motel Instagram',
+        tiktokTitle: 'Hiền Phương Motel TikTok',
         copyright: '© {{year}} HIEN PHUONG MOTEL. All rights reserved.',
       },
       chatWidget: {

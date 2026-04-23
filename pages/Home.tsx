@@ -369,7 +369,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* 3. Visitors / Testimonials Section */}
-      <div className="mt-10" >
+      <div className="mt-10">
         <style>{`
         @keyframes about-comments-marquee {
           0% {
@@ -444,40 +444,36 @@ const Home: React.FC = () => {
                       Math.min(5, Number(comment.rating) || 0),
                     );
                     return (
-                      <article
-                        key={`${groupIndex}-${comment.id}-${commentIndex}`}
-                        className="flex w-[320px] shrink-0 flex-col rounded-[28px] border border-[#eadfce] bg-white/90 p-6 shadow-[0_18px_50px_rgba(47,36,28,0.08)] sm:w-[360px]"
+                      <div
+                        key={commentIndex}
+                        className="bg-white p-8 w-[320px] rounded-2xl shadow-xl border border-brown-50 relative group hover:-translate-y-2 transition duration-300"
                       >
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex items-center gap-4">
-                            <img
-                              src={
-                                comment.avatar ||
-                                createAvatarFallback(comment.name)
-                              }
-                              alt={t("about.commentsAvatarAlt", {
-                                name: comment.name,
-                              })}
-                              onError={(event) => {
-                                event.currentTarget.onerror = null;
-                                event.currentTarget.src = createAvatarFallback(
-                                  comment.name,
-                                );
-                              }}
-                              className="h-14 w-14 rounded-full border border-[#eadbc4] object-cover"
-                            />
-                            <div>
-                              <p className="text-lg font-bold text-brown-900">
-                                {comment.name}
-                              </p>
-                              <p className="mt-1 text-xs uppercase tracking-[0.18em] text-brown-500">
-                                {formatCommentDate(comment.createdAt)}
-                              </p>
-                            </div>
-                          </div>
+                        <Quote className="absolute top-6 right-6 text-gold-200 w-10 h-10 group-hover:text-gold-400 transition" />
 
-                          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f5ede2] text-[#b79252]">
-                            <Quote size={18} />
+                        <div className="flex items-center gap-4 mb-6">
+                          <img
+                            src={
+                              comment.avatar ||
+                              createAvatarFallback(comment.name)
+                            }
+                            alt={t("about.commentsAvatarAlt", {
+                              name: comment.name,
+                            })}
+                            onError={(event) => {
+                              event.currentTarget.onerror = null;
+                              event.currentTarget.src = createAvatarFallback(
+                                comment.name,
+                              );
+                            }}
+                            className="h-14 w-14 rounded-full border border-[#eadbc4] object-cover"
+                          />
+                          <div>
+                            <h4 className="font-bold text-brown-900 text-lg">
+                              {comment.name}
+                            </h4>
+                            <span className="text-xs text-brown-500 uppercase tracking-wide font-bold">
+                              {formatCommentDate(comment.createdAt)}
+                            </span>
                           </div>
                         </div>
 
@@ -498,10 +494,10 @@ const Home: React.FC = () => {
                           </span>
                         </div>
 
-                        <p className="mt-5 flex-1 text-sm leading-7 text-brown-700">
-                          {comment.comment}
+                        <p className="text-brown-600 leading-relaxed italic border-t border-dashed border-brown-100 pt-4 mt-2">
+                          "{comment.comment}"
                         </p>
-                      </article>
+                      </div>
                     );
                   })}
                 </div>
@@ -510,47 +506,6 @@ const Home: React.FC = () => {
           </div>
         )}
       </div>
-
-      {/* 3. Visitors / Testimonials Section */}
-      {/* Decorative Background Element */}
-      {/* <div className="py-24 bg-brown-50 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-64 h-64 bg-gold-50/50 rounded-full mix-blend-multiply filter blur-3xl opacity-50 -translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-brown-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 translate-x-1/2 translate-y-1/2"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-             <h2 className="text-4xl font-serif font-bold text-brown-900">{t('home.testimonialsTitle')}</h2>
-             <div className="w-20 h-1 bg-gold-500 mx-auto mt-4"></div>
-             <p className="text-brown-600 mt-4 italic">{t('home.testimonialsSubtitle')}</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {visitors.map((visitor) => (
-              <div key={visitor.id} className="bg-white p-8 rounded-2xl shadow-xl border border-brown-50 relative group hover:-translate-y-2 transition duration-300">
-                <Quote className="absolute top-6 right-6 text-gold-200 w-10 h-10 group-hover:text-gold-400 transition" />
-                
-                <div className="flex items-center gap-4 mb-6">
-                  <img src={visitor.avatar} alt={visitor.name} className="w-14 h-14 rounded-full object-cover border-2 border-gold-500 shadow-md" />
-                  <div>
-                    <h4 className="font-bold text-brown-900 text-lg">{visitor.name}</h4>
-                    <span className="text-xs text-brown-500 uppercase tracking-wide font-bold">{visitor.location}</span>
-                  </div>
-                </div>
-                
-                <div className="flex mb-4 text-gold-500">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={16} fill="currentColor" />
-                  ))}
-                </div>
-                
-                <p className="text-brown-600 leading-relaxed italic border-t border-dashed border-brown-100 pt-4">
-                  "{visitor.comment}"
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div> */}
 
       {/* 4. Map Section */}
       <div className="w-full h-[500px] relative group">

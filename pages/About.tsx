@@ -18,14 +18,6 @@ const About: React.FC = () => {
  
   const contactChannels = [
     {
-      label: t('about.ctaPhone'),
-      value: '0345 011 468',
-      href: `tel:${primaryPhoneNumber}`,
-      Icon: Phone,
-      className: 'bg-[#c59f58] text-[#2f241c]',
-      external: false,
-    },
-    {
       label: t('about.ctaZalo'),
       value: 'Zalo 0345 011 468',
       href: zaloUrl,
