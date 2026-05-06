@@ -104,7 +104,7 @@ const Navigation: React.FC = () => {
                 <Link
                   key={link.name}
                   to={link.path}
-                  className={`px-3 py-2 text-sm font-semibold tracking-wider uppercase transition-colors duration-300 ${
+                  className={`pr-2 py-2 text-sm font-semibold tracking-wider uppercase transition-colors duration-300 ${
                     isActive(link.path)
                       ? activeTextColorClass
                       : `${textColorClass} ${hoverColorClass}`
