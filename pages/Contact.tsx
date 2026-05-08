@@ -4,12 +4,10 @@ import { useTranslation } from 'react-i18next';
 
 const primaryPhoneNumber = '0345011468';
 const secondaryPhoneNumber = '0377586258';
-const facebookUrl =
-  import.meta.env.VITE_FACEBOOK_URL?.trim() ||
-  'https://www.facebook.com/profile.php?id=61577722349701&locale=vi_VN';
-const zaloUrl = import.meta.env.VITE_ZALO_URL?.trim() || 'https://zalo.me/0345011468';
-const instagramUrl = import.meta.env.VITE_INSTAGRAM_URL?.trim() || 'https://www.instagram.com/hienphuongmotel/';
-const tiktokUrl = import.meta.env.VITE_TIKTOK_URL?.trim() || 'https://www.tiktok.com/@motelhienphuong';
+const facebookUrl = 'https://www.facebook.com/profile.php?id=61577722349701&locale=vi_VN';
+const zaloUrl = 'https://zalo.me/0345011468';
+const instagramUrl = 'https://www.instagram.com/hienphuongmotel/';
+const tiktokUrl = 'https://www.tiktok.com/@motelhienphuong';
 
 const Contact: React.FC = () => {
   const { t } = useTranslation();

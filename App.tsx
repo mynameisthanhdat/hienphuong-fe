@@ -35,8 +35,8 @@ const TikTokIcon: React.FC<{ size?: number }> = ({ size = 24 }) => (
 const Footer: React.FC = () => {
   const location = useLocation();
   const { t } = useTranslation();
-  const instagramUrl = import.meta.env.VITE_INSTAGRAM_URL || 'https://www.instagram.com/';
-  const tiktokUrl = import.meta.env.VITE_TIKTOK_URL || 'https://www.tiktok.com/';
+  const instagramUrl = 'https://www.instagram.com/hienphuongmotel/';
+  const tiktokUrl = 'https://www.tiktok.com/@motelhienphuong';
   
   // Các trang không hiển thị footer
   const hiddenPaths = ['/about', '/tourism', '/rooms', '/reservation', '/contact'];
