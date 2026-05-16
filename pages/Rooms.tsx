@@ -826,7 +826,7 @@ const Rooms: React.FC = () => {
               <img
                 src={activePreviewImage}
                 alt={t("rooms.photoAlt", { roomName: previewRoom.name })}
-                className="h-[52vh] min-h-[280px] w-full object-cover sm:h-[60vh]"
+                className="h-[52vh] min-h-[280px] object-cover sm:h-[60vh] w-auto my-0 mx-auto"
               />
 
               {previewImages.length > 1 && (
